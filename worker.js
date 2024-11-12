@@ -17,4 +17,5 @@ async function run_model(input) {
         images: input
     });
     return outputs["output0"].data;
+    
 }
