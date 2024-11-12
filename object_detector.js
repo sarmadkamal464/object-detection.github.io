@@ -1,9 +1,9 @@
 const videos = document.querySelectorAll("video");
 
 const worker = new Worker("worker.js");
-let boxes = [];
-let interval
-let busy = false;
+let boxes = [[], [], [], []];
+let interval = []
+let busy = [false, false, false, false];
 
 videos.forEach((video, index) => {
     video.addEventListener("play", () => {
@@ -11,17 +11,17 @@ videos.forEach((video, index) => {
         canvas.width = 0 || video.videoWidth;
         canvas.height = 0 || video.videoHeight;
         const context = canvas.getContext("2d");
-        interval = setInterval(() => {
+        interval[index] = setInterval(() => {
             context.drawImage(video, 0, 0);
-            draw_boxes(canvas, boxes);
+            draw_boxes(canvas, boxes[index]);
             const input = prepare_input(canvas);
             const inputObj = {
                 input,
                 index
             }
-            if (!busy) {
+            if (!busy[index]) {
                 worker.postMessage(inputObj);
-                busy = true;
+                busy[index] = true;
             }
         }, 30)
     });
@@ -30,13 +30,14 @@ videos.forEach((video, index) => {
 worker.onmessage = (event) => {
     const output = event.data;
     const canvas = document.querySelector(`#canvas${output.index}`);
-    boxes = process_output(output.output, canvas.width, canvas.height);
-    busy = false;
+    boxes[output.index] = process_output(output.output, canvas.width, canvas.height);
+    busy[output.index] = false;
 };
 
-videos.forEach(video => {
+videos.forEach((video, index) => {
     video.addEventListener("pause", () => {
-        clearInterval(interval);
+        clearInterval(interval[index]);
+        boxes[index] = [];
     });
 })
 
