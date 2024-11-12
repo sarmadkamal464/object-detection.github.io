@@ -1,42 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <title>Object detector</title>
-   </head>
-   <body>
-      <section>
-         <h2>Cow Video</h2>
-         <canvas id="canvas0"></canvas>
-         <br/>
-         <video controls style="display:none" src="cow.mp4"></video>
-         <button id="cowPlay">Play</button>
-         <button id="cowPause">Pause</button>
-      </section>
-      <section>
-         <h2>Cow And Dog Video</h2>
-         <canvas id="canvas1"></canvas>
-         <br/>
-         <video controls style="display:none" src="cow_dog.mp4" ></video>
-         <button id="cowDogPlay">Play</button>
-         <button id="cowDogPause">Pause</button>
-      </section>
-      <section>
-         <h2>Cat Video</h2>
-         <canvas id="canvas2"></canvas>
-         <br/>
-         <video controls style="display:none" src="cat.mp4"></video>
-         <button id="catPlay">Play</button>
-         <button id="catPause">Pause</button>
-      </section>
-      <section>
-         <h2>Dog Video</h2>
-         <canvas id="canvas3"></canvas>
-         <br/>
-         <video controls style="display:none" src="dog.mp4" ></video>
-         <button id="dogPlay">Play</button>
-         <button id="dogPause">Pause</button>
-      </section>
-      <script src="object_detector.js" defer></script>
-   </body>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Object detector</title>
+    </head>
+    <body>
+        <!-- Play only one video at a time. Comment the others video code -->
+        <!-- <video controls style="display:none" src="cat.mp4"></video> -->
+        <!-- <video controls style="display:none" src="dog.mp4" ></video> -->
+        <!-- <video controls style="display:none" src="cow.mp4" ></video> -->
+        <video controls style="display: none;" src="cow_dog.mp4"></video>
+        <!-- <video controls style="display:none" src="different_objects.mp4"></video> -->
+        <br />
+        <canvas></canvas><br />
+        <button id="play">Play</button>&nbsp;
+        <button id="pause">Pause</button>
+        <script src="object_detector.js" defer></script>
+    </body>
 </html>

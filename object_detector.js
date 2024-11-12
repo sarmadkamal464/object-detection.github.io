@@ -1,83 +1,39 @@
-const videos = document.querySelectorAll("video");
-
+const video = document.querySelector("video");
 const worker = new Worker("worker.js");
 let boxes = [];
 let interval
 let busy = false;
-
-videos.forEach((video, index) => {
-    video.addEventListener("play", () => {
-        const canvas = document.querySelector(`#canvas${index}`);
-        canvas.width = 0 || video.videoWidth;
-        canvas.height = 0 || video.videoHeight;
-        const context = canvas.getContext("2d");
-        interval = setInterval(() => {
-            context.drawImage(video, 0, 0);
-            draw_boxes(canvas, boxes);
-            const input = prepare_input(canvas);
-            const inputObj = {
-                input,
-                index
-            }
-            if (!busy) {
-                worker.postMessage(inputObj);
-                busy = true;
-            }
-        }, 30)
-    });
-})
-
+video.addEventListener("play", () => {
+    const canvas = document.querySelector("canvas");
+    canvas.width = 0 || video.videoWidth;
+    canvas.height = 0 || video.videoHeight;
+    const context = canvas.getContext("2d");
+    interval = setInterval(() => {
+        context.drawImage(video, 0, 0);
+        draw_boxes(canvas, boxes);
+        const input = prepare_input(canvas);
+        if (!busy) {
+            worker.postMessage(input);
+            busy = true;
+        }
+    }, 30)
+});
 worker.onmessage = (event) => {
     const output = event.data;
-    const canvas = document.querySelector(`#canvas${output.index}`);
-    boxes = process_output(output.output, canvas.width, canvas.height);
+    const canvas = document.querySelector("canvas");
+    boxes = process_output(output, canvas.width, canvas.height);
     busy = false;
 };
-
-videos.forEach(video => {
-    video.addEventListener("pause", () => {
-        clearInterval(interval);
-    });
-})
-
-const cowPlayBtn = document.getElementById("cowPlay");
-const cowPauseBtn = document.getElementById("cowPause");
-
-const cowDogPlayBtn = document.getElementById("cowDogPlay");
-const cowDogPauseBtn = document.getElementById("cowDogPause");
-
-const catPlayBtn = document.getElementById("catPlay");
-const catPauseBtn = document.getElementById("catPause");
-
-const dogPlayBtn = document.getElementById("dogPlay");
-const dogPauseBtn = document.getElementById("dogPause");
-
-cowPlayBtn.addEventListener("click", () => {
-    videos[0].play();
+video.addEventListener("pause", () => {
+    clearInterval(interval);
 });
-cowPauseBtn.addEventListener("click", () => {
-    videos[0].pause();
+const playBtn = document.getElementById("play");
+const pauseBtn = document.getElementById("pause");
+playBtn.addEventListener("click", () => {
+    video.play();
 });
-
-cowDogPlayBtn.addEventListener("click", () => {
-    videos[1].play();
-});
-cowDogPauseBtn.addEventListener("click", () => {
-    videos[1].pause();
-});
-
-catPlayBtn.addEventListener("click", () => {
-    videos[2].play();
-});
-catPauseBtn.addEventListener("click", () => {
-    videos[2].pause();
-});
-
-dogPlayBtn.addEventListener("click", () => {
-    videos[3].play();
-});
-dogPauseBtn.addEventListener("click", () => {
-    videos[3].pause();
+pauseBtn.addEventListener("click", () => {
+    video.pause();
 });
 
 function prepare_input(img) {
